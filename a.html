@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuxuryStay AI | Premium Hotel Booking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a0ca3;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --success: #4cc9f0;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7ff;
+            color: var(--dark);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-accent {
+            background: var(--accent);
+        }
+
+        .btn-accent:hover {
+            background: #e5177e;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        .hero {
+            height: 70vh;
+            min-height: 500px;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                        url('https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 600px;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .search-container {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-top: -3rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .search-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .room-card {
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            will-change: transform;
+        }
+
+        .room-card:hover {
+            transform: translateY(-0.5rem);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .room-img {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .room-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .room-card:hover .room-img img {
+            transform: scale(1.05);
+        }
+
+        .room-content {
+            padding: 1.5rem;
+        }
+
+        .room-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+        }
+
+        .room-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .room-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .ai-assistant {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+
+        .ai-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+            border: none;
+            will-change: transform;
+        }
+
+        .ai-button:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .ai-button.pulse {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .ai-chatbox {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            max-height: 70vh;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: none;
+        }
+
+        .ai-chatbox.active {
+            display: flex;
+            flex-direction: column;
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header h3 {
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .chat-message {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ai-message {
+            align-self: flex-start;
+            background: var(--light-gray);
+            border-bottom-left-radius: 0.25rem;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: var(--primary);
+            color: white;
+            border-bottom-right-radius: 0.25rem;
+        }
+
+        .message-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .option-btn {
+            padding: 0.5rem 1rem;
+            background: var(--light-gray);
+            border: none;
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        .option-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 1rem;
+            border-top: 1px solid var(--light-gray);
+            gap: 0.5rem;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 2rem;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        .chat-input button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .chat-input button:hover {
+            background: var(--primary-dark);
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background: white;
+            border: 1px solid var(--light-gray);
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .ai-chatbox {
+                width: 90vw;
+                right: 5vw;
+            }
+            
+            nav ul {
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .hero {
+                height: 60vh;
+            }
+            
+            .room-card {
+                min-width: 280px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-crown"></i>
+                <span>LuxuryStay AI</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#rooms"><i class="fas fa-bed"></i> Rooms</a></li>
+                    <li><a href="#"><i class="fas fa-info-circle"></i> About</a></li>
+                    <li><a href="#"><i class="fas fa-phone"></i> Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>AI-Powered Luxury Stays Tailored For You</h1>
+            <p>Experience the future of hotel booking with our intelligent assistant and premium accommodations</p>
+            <button class="btn btn-accent">Explore Collections</button>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="search-container">
+            <form class="search-form" id="searchForm">
+                <div class="form-group">
+                    <input type="text" id="destination" class="form-control" placeholder="🌍 Destination" required>
+                </div>
+                <div class="form-group">
+                    <input type="date" id="check-in" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <input type="date" id="check-out" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <select id="guests" class="form-control">
+                        <option value="" disabled selected>👥 Guests</option>
+                        <option value="1">1 Guest</option>
+                        <option value="2">2 Guests</option>
+                        <option value="3">3 Guests</option>
+                        <option value="4+">4+ Guests</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Search Hotels</button>
+            </form>
+        </div>
+    </div>
+
+    <section id="rooms" class="container">
+        <h2 style="font-size: 2rem; margin-bottom: 1rem;">Premium Accommodations</h2>
+        <p style="color: var(--gray); margin-bottom: 2rem;">Curated selection of luxury stays powered by AI recommendations</p>
+
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="1bhk">1 BHK</button>
+            <button class="filter-btn" data-filter="2bhk">2 BHK</button>
+            <button class="filter-btn" data-filter="3bhk">3 BHK</button>
+            <button class="filter-btn" data-filter="suite">Suites</button>
+            <button class="filter-btn" data-filter="villa">Villas</button>
+        </div>
+
+        <div class="rooms-grid" id="roomsGrid">
+            <!-- Room cards will be loaded dynamically -->
+        </div>
+    </section>
+
+    <div class="ai-assistant">
+        <button class="ai-button pulse" id="aiButton">
+            <i class="fas fa-robot"></i>
+        </button>
+        <div class="ai-chatbox" id="aiChatbox">
+            <div class="chat-header">
+                <h3><i class="fas fa-robot"></i> LuxuryStay AI</h3>
+                <button class="btn" id="closeChat"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="chat-body" id="chatBody">
+                <!-- Messages will appear here -->
+            </div>
+            <div class="chat-input">
+                <input type="text" id="userInput" placeholder="Type your message...">
+                <button id="sendMessage"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Room data
+            const roomsData = [
+                {
+                    id: 1,
+                    title: "Deluxe Room",
+                    category: "1bhk",
+                    price: 120,
+                    image: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+                    features: ["1 BHK", "2 Guests", "350 sq.ft"],
+                    description: "Elegant room with modern amenities and comfortable queen bed"
+                },
+                {
+                    id: 2,
+                    title: "Executive Suite",
+                    category: "2bhk",
+                    price: 220,
+                    image: "https://images.unsplash.com/photo-1566669437685-5d3f80b5a8e5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1974&q=80",
+                    features: ["2 BHK", "4 Guests", "600 sq.ft"],
+                    description: "Spacious suite with separate living area and premium amenities"
+                },
+                {
+                    id: 3,
+                    title: "Presidential Suite",
+                    category: "3bhk",
+                    price: 450,
+                    image: "https://images.unsplash.com/photo-1582719471389-8d2b7a4c1239?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+                    features: ["3 BHK", "6 Guests", "1200 sq.ft"],
+                    description: "Ultimate luxury with panoramic views and premium services"
+                },
+                {
+                    id: 4,
+                    title: "Honeymoon Suite",
+                    category: "suite",
+                    price: 280,
+                    image: "https://images.unsplash.com/photo-1596178065887-1198b6148b2b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+                    features: ["1 BHK", "2 Guests", "500 sq.ft"],
+                    description: "Romantic suite with special amenities for couples"
+                },
+                {
+                    id: 5,
+                    title: "Beachfront Villa",
+                    category: "villa",
+                    price: 650,
+                    image: "https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&auto=format&fit=crop&w=1932&q=80",
+                    features: ["3 BHK", "8 Guests", "2000 sq.ft"],
+                    description: "Private villa with direct beach access and personal butler"
+                },
+                {
+                    id: 6,
+                    title: "Family Suite",
+                    category: "2bhk",
+                    price: 320,
+                    image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2003&q=80",
+                    features: ["2 BHK", "5 Guests", "800 sq.ft"],
+                    description: "Perfect for families with connecting rooms and extra space"
+                }
+            ];
+
+            // Load rooms function
+            function loadRooms(filter = 'all') {
+                const roomsGrid = document.getElementById('roomsGrid');
+                roomsGrid.innerHTML = '';
+                
+                const filteredRooms = filter === 'all' 
+                    ? roomsData 
+                    : roomsData.filter(room => room.category === filter);
+                
+                filteredRooms.forEach(room => {
+                    const roomCard = document.createElement('div');
+                    roomCard.className = 'room-card';
+                    roomCard.dataset.category = room.category;
+                    
+                    roomCard.innerHTML = `
+                        <div class="room-img">
+                            <img src="${room.image}" alt="${room.title}" loading="lazy">
+                        </div>
+                        <div class="room-content">
+                            <h3 class="room-title">${room.title}</h3>
+                            <div class="room-features">
+                                ${room.features.map(feat => 
+                                    `<div class="room-feature">
+                                        <i class="fas fa-${feat.includes('BHK') ? 'home' : 
+                                          feat.includes('Guests') ? 'user-friends' : 'ruler-combined'}"></i>
+                                        ${feat}
+                                    </div>`
+                                ).join('')}
+                            </div>
+                            <p>${room.description}</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+                                <div class="price">$${room.price} <span style="font-size: 1rem;">/ night</span></div>
+                                <button class="btn book-btn" data-room="${room.id}">Book Now</button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    roomsGrid.appendChild(roomCard);
+                });
+                
+                // Add event listeners to new book buttons
+                document.querySelectorAll('.book-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const roomId = this.dataset.room;
+                        const room = roomsData.find(r => r.id == roomId);
+                        startBookingFlow(room);
+                    });
+                });
+            }
+            
+            // Initialize rooms
+            loadRooms();
+            
+            // Filter rooms
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    loadRooms(this.dataset.filter);
+                });
+            });
+            
+            // Chatbot functionality
+            const chatState = {
+                currentStep: 'welcome',
+                bookingInfo: null,
+                conversation: [
+                    { sender: 'ai', message: "Hello! I'm your LuxuryStay AI assistant. How can I help you today?" }
+                ]
+            };
+            
+            function renderChat() {
+                const chatBody = document.getElementById('chatBody');
+                chatBody.innerHTML = '';
+                
+                chatState.conversation.forEach(msg => {
+                    const msgDiv = document.createElement('div');
+                    msgDiv.className = `${msg.sender}-message chat-message`;
+                    msgDiv.textContent = msg.message;
+                    chatBody.appendChild(msgDiv);
+                    
+                    if (msg.options) {
+                        const optionsDiv = document.createElement('div');
+                        optionsDiv.className = 'message-options';
+                        
+                        msg.options.forEach(opt => {
+                            const btn = document.createElement('button');
+                            btn.className = 'option-btn';
+                            btn.textContent = opt.text;
+                            btn.dataset.value = opt.value;
+                            btn.addEventListener('click', () => processUserInput(opt.value));
+                            optionsDiv.appendChild(btn);
+                        });
+                        
+                        const aiMsgDiv = document.createElement('div');
+                        aiMsgDiv.className = 'ai-message chat-message';
+                        aiMsgDiv.appendChild(optionsDiv);
+                        chatBody.appendChild(aiMsgDiv);
+                    }
+                });
+                
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+            
+            function addMessage(sender, message, options = null) {
+                chatState.conversation.push({ sender, message });
+                if (options) {
+                    chatState.conversation.push({ sender: 'ai', options });
+                }
+                renderChat();
+            }
+            
+            function processUserInput(input) {
+                addMessage('user', input);
+                
+                setTimeout(() => {
+                    handleAIResponse(input);
+                }, 300);
+            }
+            
+            function handleAIResponse(input) {
+                input = input.toLowerCase();
+                
+                if (chatState.currentStep === 'welcome') {
+                    if (input.includes('book') || input.includes('reserve')) {
+                        chatState.currentStep = 'booking';
+                        addMessage('ai', "Great! Let's find your perfect stay. What type of room are you interested in?", [
+                            { text: "1 BHK (for couples)", value: "1bhk" },
+                            { text: "2 BHK (family)", value: "2bhk" },
+                            { text: "Luxury Suite", value: "suite" },
+                            { text: "Private Villa", value: "villa" }
+                        ]);
+                    }
+                    else if (input.includes('help') || input.includes('support')) {
+                        addMessage('ai', "I can help with:\n- Finding available rooms\n- Making reservations\n- Answering questions\n\nWhat would you like to do?");
+                    }
+                    else {
+                        addMessage('ai', "I'm here to help you book your perfect stay. Would you like to:", [
+                            { text: "Book a room", value: "book" },
+                            { text: "See room options", value: "options" },
+                            { text: "Get help", value: "help" }
+                        ]);
+                    }
+                    return;
+                }
+                
+                if (chatState.currentStep === 'booking') {
+                    if (['1bhk', '2bhk', '3bhk', 'suite', 'villa'].includes(input)) {
+                        chatState.bookingInfo = { roomType: input };
+                        chatState.currentStep = 'dates';
+                        addMessage('ai', "Excellent choice! When would you like to check in?", [
+                            { text: "Today", value: "today" },
+                            { text: "Tomorrow", value: "tomorrow" },
+                            { text: "This weekend", value: "weekend" },
+                            { text: "Enter date...", value: "date" }
+                        ]);
+                    }
+                    else {
+                        addMessage('ai', "Please select a room type:", [
+                            { text: "1 BHK", value: "1bhk" },
+                            { text: "2 BHK", value: "2bhk" },
+                            { text: "Suite", value: "suite" },
+                            { text: "Villa", value: "villa" }
+                        ]);
+                    }
+                    return;
+                }
+                
+                if (chatState.currentStep === 'dates') {
+                    if (input === 'today' || input === 'tomorrow' || input === 'weekend') {
+                        const date = new Date();
+                        if (input === 'tomorrow') date.setDate(date.getDate() + 1);
+                        if (input === 'weekend') date.setDate(date.getDate() + (6 - date.getDay()));
+                        
+                        chatState.bookingInfo.checkIn = date.toISOString().split('T')[0];
+                        chatState.currentStep = 'duration';
+                        addMessage('ai', "How many nights will you be staying?", [
+                            { text: "1 night", value: "1" },
+                            { text: "2 nights", value: "2" },
+                            { text: "3 nights", value: "3" },
+                            { text: "1 week", value: "7" }
+                        ]);
+                    }
+                    else if (input.match(/\d{4}-\d{2}-\d{2}/)) {
+                        chatState.bookingInfo.checkIn = input;
+                        chatState.currentStep = 'duration';
+                        addMessage('ai', "How many nights will you be staying?", [
+                            { text: "1 night", value: "1" },
+                            { text: "2 nights", value: "2" },
+                            { text: "3 nights", value: "3" },
+                            { text: "1 week", value: "7" }
+                        ]);
+                    }
+                    else {
+                        addMessage('ai', "Please provide a valid check-in date (YYYY-MM-DD format) or choose an option");
+                    }
+                    return;
+                }
+                
+                if (chatState.currentStep === 'duration') {
+                    if (input.match(/^\d+$/)) {
+                        chatState.bookingInfo.nights = input;
+                        chatState.currentStep = 'guests';
+                        addMessage('ai', "How many guests will be staying?", [
+                            { text: "1 guest", value: "1" },
+                            { text: "2 guests", value: "2" },
+                            { text: "Family of 4", value: "4" },
+                            { text: "Group of 6+", value: "6" }
+                        ]);
+                    }
+                    else {
+                        addMessage('ai', "Please enter the number of nights you'll be staying");
+                    }
+                    return;
+                }
+                
+                if (chatState.currentStep === 'guests') {
+                    if (input.match(/^\d+$/)) {
+                        chatState.bookingInfo.guests = input;
+                        chatState.currentStep = 'confirm';
+                        
+                        const room = roomsData.find(r => r.category === chatState.bookingInfo.roomType);
+                        const total = room.price * chatState.bookingInfo.nights;
+                        
+                        addMessage('ai', `Please confirm your booking:\n\n` +
+                            `• Room: ${room.title}\n` +
+                            `• Check-in: ${chatState.bookingInfo.checkIn}\n` +
+                            `• Nights: ${chatState.bookingInfo.nights}\n` +
+                            `• Guests: ${chatState.bookingInfo.guests}\n` +
+                            `• Total: $${total}\n\n` +
+                            `Would you like to proceed?`, [
+                            { text: "✅ Confirm Booking", value: "confirm" },
+                            { text: "✏️ Make Changes", value: "change" }
+                        ]);
+                    }
+                    else {
+                        addMessage('ai', "Please enter the number of guests");
+                    }
+                    return;
+                }
+                
+                if (chatState.currentStep === 'confirm') {
+                    if (input === 'confirm') {
+                        addMessage('ai', "🎉 Booking confirmed! A confirmation has been sent to your email. Thank you for choosing LuxuryStay!");
+                        chatState.currentStep = 'welcome';
+                        chatState.bookingInfo = null;
+                    }
+                    else if (input === 'change') {
+                        chatState.currentStep = 'booking';
+                        addMessage('ai', "What would you like to change?", [
+                            { text: "Room Type", value: "room" },
+                            { text: "Dates", value: "dates" },
+                            { text: "Guest Count", value: "guests" }
+                        ]);
+                    }
+                    return;
+                }
+                
+                addMessage('ai', "I'm not sure I understand. Would you like to:", [
+                    { text: "Start over", value: "restart" },
+                    { text: "Book a room", value: "book" },
+                    { text: "See room options", value: "options" }
+                ]);
+            }
+            
+            function startBookingFlow(room = null) {
+                if (room) {
+                    chatState.bookingInfo = { roomType: room.category };
+                    chatState.currentStep = 'dates';
+                    addMessage('ai', `You've selected our ${room.title}. When would you like to check in?`, [
+                        { text: "Today", value: "today" },
+                        { text: "Tomorrow", value: "tomorrow" },
+                        { text: "This weekend", value: "weekend" },
+                        { text: "Enter date...", value: "date" }
+                    ]);
+                } else {
+                    chatState.currentStep = 'booking';
+                    addMessage('ai', "What type of room are you interested in?", [
+                        { text: "1 BHK (for couples)", value: "1bhk" },
+                        { text: "2 BHK (family)", value: "2bhk" },
+                        { text: "Luxury Suite", value: "suite" },
+                        { text: "Private Villa", value: "villa" }
+                    ]);
+                }
+                
+                document.getElementById('aiChatbox').classList.add('active');
+                document.getElementById('aiButton').classList.remove('pulse');
+            }
+            
+            // Initialize chat
+            renderChat();
+            
+            // Event Listeners
+            document.getElementById('aiButton').addEventListener('click', function() {
+                const chatbox = document.getElementById('aiChatbox');
+                chatbox.classList.toggle('active');
+                this.classList.remove('pulse');
+                
+                if (chatbox.classList.contains('active')) {
+                    setTimeout(() => {
+                        document.getElementById('chatBody').scrollTop = 
+                            document.getElementById('chatBody').scrollHeight;
+                    }, 100);
+                }
+            });
+            
+            document.getElementById('closeChat').addEventListener('click', function() {
+                document.getElementById('aiChatbox').classList.remove('active');
+            });
+            
+            document.getElementById('sendMessage').addEventListener('click', function() {
+                const input = document.getElementById('userInput');
+                if (input.value.trim()) {
+                    processUserInput(input.value.trim());
+                    input.value = '';
+                }
+            });
+            
+            document.getElementById('userInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && this.value.trim()) {
+                    processUserInput(this.value.trim());
+                    this.value = '';
+                }
+            });
+            
+            // Search form
+            document.getElementById('searchForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const destination = document.getElementById('destination').value;
+                const checkIn = document.getElementById('check-in').value;
+                const checkOut = document.getElementById('check-out').value;
+                const guests = document.getElementById('guests').value;
+                
+                console.log('Searching for:', { destination, checkIn, checkOut, guests });
+                
+                document.getElementById('aiChatbox').classList.add('active');
+                addMessage('ai', `I found several options in ${destination} for ${guests} guests from ${checkIn} to ${checkOut}. Would you like me to show them?`, [
+                    { text: "Show Results", value: "show results" },
+                    { text: "Help Me Choose", value: "help choose" }
+                ]);
+            });
+            
+            // Date picker setup
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('check-in').min = today;
+            document.getElementById('check-out').min = today;
+            
+            document.getElementById('check-in').addEventListener('change', function() {
+                if (this.value) {
+                    document.getElementById('check-out').min = this.value;
+                }
+            });
+            
+            // Pulse animation for AI button
+            setTimeout(() => {
+                document.getElementById('aiButton').classList.add('pulse');
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
